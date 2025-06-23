@@ -1,6 +1,9 @@
 const express = require("express");
 require("dotenv").config();
 const path = require("path");
+const cookieParser = require("cookie-parser");
+const { checkForAuth } = require("./middlewares/authentication");
+const Blog = require("./models/blog.model");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -29,13 +32,23 @@ app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join("./views"));
 app.use(express.static(path.resolve("./public")));
+app.use(cookieParser());
+app.use(checkForAuth("token"));
 
 // Routes
-app.get("/api/v1", (req, res) => {
-  return res.render("home");
+app.get("/api/v1", async (req, res) => {
+  const allBlogs = await Blog.find({});
+
+  return res.render("home", {
+    user: req.user,
+    blogs: allBlogs,
+  });
 });
 
 const userRoutes = require("./routes/user.routes");
 app.use("/api/v1/user", userRoutes);
+
+const blogRoutes = require("./routes/blog.routes");
+app.use("/api/v1/blog", blogRoutes);
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));

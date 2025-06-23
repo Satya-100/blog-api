@@ -3,13 +3,25 @@
 
 <head>
     <%- include("./partials/head") %>
-    <title>Blog Application</title>
+        <title>Blog Application</title>
 </head>
 
 <body>
     <%- include("./partials/nav") %>
-    
-    <%- include("./partials/scripts") %>
+
+        <div class="container mt-4">
+            <% blogs.forEach(blog => { %>
+                <div class="card" style="width: 18rem;">
+                    <img src="<%= blog.coverImgUrl %>" class="card-img-top" alt="<%= blog.title %>">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= blog.title %></h5>
+                        <a href="/api/v1/blog/<%= blog._id %>" class="btn btn-primary">Read more</a>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+
+        <%- include("./partials/scripts") %>
 </body>
 
 </html>

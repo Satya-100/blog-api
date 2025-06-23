@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include("./partials/head") %>
+        <title>Blog Application</title>
+</head>
+
+<body>
+    <%- include("./partials/nav") %>
+
+        <div class="container mt-4">
+            <h1>
+                <%= blog.title %>
+            </h1>
+            <img src="<%= blog.coverImgUrl %>" width="200px" alt="Blog Image" class="img-fluid mb-3">
+            <pre><%= blog.content %></pre>
+        </div>
+
+        <div class="container mt-4">
+            <img src="<%= blog.author.profileImgUrl %>" alt="Author Avatar" class="rounded-circle mb-2"
+                style="width: 50px; height: 50px;">
+            <p><strong>Author:</strong>
+                <%= blog.author.fullName %>
+            </p>
+        </div>
+
+        <div class="container mt-4">
+
+            <% if (locals.user) { %>
+                <h1>Comments: </h1>
+                <form action="/api/v1/blog/comments/<%= blog._id %>" method="post">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="content" placeholder="Add a comment" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+
+
+                <div class="container mt-3">
+                    <% comments.forEach(comment=> { %>
+                        <div class="border p-3 mb-3">
+                            <img src="<%= blog.author.profileImgUrl %>" alt="Author Avatar" class="rounded-circle mb-2"
+                                style="width: 50px; height: 50px;"> <%= comment.createdBy.fullName %>
+                            <p>
+                                <%= comment.content %>
+                            </p>
+                        </div>
+                        <% }) %>
+                </div>
+                <% } %>
+
+        </div>
+
+
+
+        <%- include("./partials/scripts") %>
+</body>
+
+</html>
